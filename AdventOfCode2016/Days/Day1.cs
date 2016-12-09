@@ -72,8 +72,7 @@ namespace AdventOfCode2016.Days
 
             Console.WriteLine("Which is " + finalDistance + " blocks away from where we started!");
         }
-
-        //Aparently this one doesn't give the right answer, I dunno why, check reddit for the right answer...
+        
         public void RunAdvanced()
         {
             Console.WriteLine("Welcome to Day 1: Finding the lair");

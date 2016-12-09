@@ -44,6 +44,10 @@ namespace AdventOfCode2016
                                     inputValid = true;
                                     thisDay = new Day1();
                                     break;
+                                case 2:
+                                    inputValid = true;
+                                    thisDay = new Day2();
+                                    break;
                                 default:
                                     Console.WriteLine("I don't know that day, try again");
                                     break;
