@@ -110,18 +110,29 @@ namespace AdventOfCode2016.Days
 
                 SetDirectionStep();
 
-                ourLocation.X += directionStep.X * distance;
-                ourLocation.Y += directionStep.Y * distance;
+                bool foundIt = false;
 
-                bool visited = visitedLocations.Any(l => l.X == ourLocation.X && l.Y == ourLocation.Y);
-
-                if (!visited)
+                for (int i = 0; i < distance; i++)
                 {
-                    Coordinate newLocation = new Coordinate(ourLocation.X, ourLocation.Y);
+                    ourLocation.X += directionStep.X * 1;
+                    ourLocation.Y += directionStep.Y * 1;
 
-                    visitedLocations.Add(newLocation);
+                    bool visited = visitedLocations.Any(l => l.X == ourLocation.X && l.Y == ourLocation.Y);
+
+                    if (!visited)
+                    {
+                        Coordinate newLocation = new Coordinate(ourLocation.X, ourLocation.Y);
+
+                        visitedLocations.Add(newLocation);
+                    }
+                    else
+                    {
+                        foundIt = true;
+                        break;
+                    }
                 }
-                else
+
+                if (foundIt)
                 {
                     break;
                 }
