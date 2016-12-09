@@ -13,49 +13,88 @@ namespace AdventOfCode2016
         {
             Console.WriteLine("Welcome to Advent of Code 2016!");
 
-            string input;
-            bool inputValid = false;
-
-            bool canConvertInput;
-            int day;
-
-            //TODO: generic ways of doing things
-
-            while (!inputValid)
+            bool running = true;
+            
+            //TODO: generic ways of doing input
+            while (running)
             {
-                Console.WriteLine("Please select your day to play");
+                Console.WriteLine("Please select your day to play or type (exit) to stop");
 
-                input = Console.ReadLine();
+                string input;
+                bool inputValid = false;
 
-                if (!string.IsNullOrEmpty(input))
+                bool canConvertInput;
+                int day;
+                
+                while (!inputValid)
                 {
-                    canConvertInput = int.TryParse(input, out day);
+                    input = Console.ReadLine();
 
-                    if (canConvertInput)
+                    if (!string.IsNullOrEmpty(input))
                     {
-                        IDay thisDay = null;
+                        canConvertInput = int.TryParse(input, out day);
 
-                        switch (day)
+                        if (canConvertInput)
                         {
-                            case 1:
-                                inputValid = true;
-                                thisDay = new Day1();
-                                break;
-                            default:
-                                Console.WriteLine("I don't know that day, try again");
-                                break;
+                            IDay thisDay = null;
+
+                            switch (day)
+                            {
+                                case 1:
+                                    inputValid = true;
+                                    thisDay = new Day1();
+                                    break;
+                                default:
+                                    Console.WriteLine("I don't know that day, try again");
+                                    break;
+                            }
+
+                            if (thisDay != null)
+                            {
+                                bool isAdvancedInputCorrect = false;
+                                string advancedInput = null;
+
+                                while (!isAdvancedInputCorrect)
+                                {
+                                    Console.WriteLine("The simple (S) or the advanced (A) version?");
+
+                                    advancedInput = Console.ReadLine();
+
+                                    if (advancedInput.ToLower().Equals("simple") || advancedInput.ToUpper().Equals("S"))
+                                    {
+                                        isAdvancedInputCorrect = true;
+                                        thisDay.RunSimple();
+                                    }
+                                    else if (advancedInput.ToLower().Equals("advanced") || advancedInput.ToUpper().Equals("A"))
+                                    {
+                                        isAdvancedInputCorrect = true;
+                                        thisDay.RunAdvanced();
+                                    }
+                                    else
+                                    {
+                                        isAdvancedInputCorrect = false;
+                                        Console.WriteLine("That's not what I asked!");
+                                    }
+                                }
+
+                            }
                         }
-
-                        if(thisDay != null)
+                        else
                         {
-                            //TODO: ask if simple or advanced
-                            thisDay.RunSimple();
+                            if (input.ToLower().Equals("exit"))
+                            {
+                                running = false;
+                                inputValid = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Please input the day number or (exit)");
+                            }
                         }
                     }
                 }
             }
-
-            Console.WriteLine("Shutting down");
+            Console.WriteLine("Press enter to shut down");
             Console.ReadLine();
         }
     }

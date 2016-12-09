@@ -32,7 +32,7 @@ namespace AdventOfCode2016.Days
         {
             Console.WriteLine("Welcome to Day 1: Navigating the city");
             Console.WriteLine("Our instructions are these: ");
-            
+
             string input = File.ReadAllText("InputFiles/inputday1.txt");
 
             Console.WriteLine(input);
@@ -40,7 +40,7 @@ namespace AdventOfCode2016.Days
             //We start facing North
             currentDirection = Direction.North;
             SetDirectionStep();
-            
+
             string[] steps = input.Split(',');
 
             foreach (string step in steps)
@@ -73,9 +73,63 @@ namespace AdventOfCode2016.Days
             Console.WriteLine("Which is " + finalDistance + " blocks away from where we started!");
         }
 
+        //Aparently this one doesn't give the right answer, I dunno why, check reddit for the right answer...
         public void RunAdvanced()
         {
-            Console.WriteLine("Not implemented yet, sorry!");
+            Console.WriteLine("Welcome to Day 1: Finding the lair");
+            Console.WriteLine("Our instructions are these: ");
+
+            string input = File.ReadAllText("InputFiles/inputday1.txt");
+
+            Console.WriteLine(input);
+
+            //We start facing North
+            currentDirection = Direction.North;
+            SetDirectionStep();
+
+            string[] steps = input.Split(',');
+
+            List<Coordinate> visitedLocations = new List<Coordinate>();
+
+            foreach (string step in steps)
+            {
+                string thisStep = step.Trim();
+
+                string turnDirection = thisStep[0].ToString().ToUpper();
+                string stepDistance = thisStep.Substring(1);
+                int distance = int.Parse(stepDistance);
+
+                if (turnDirection.Equals("R"))
+                {
+                    SwitchDirectionRight();
+                }
+                else if (turnDirection.Equals("L"))
+                {
+                    SwitchDirectionLeft();
+                }
+
+                SetDirectionStep();
+
+                ourLocation.X += directionStep.X * distance;
+                ourLocation.Y += directionStep.Y * distance;
+
+                bool visited = visitedLocations.Any(l => l.X == ourLocation.X && l.Y == ourLocation.Y);
+
+                if (!visited)
+                {
+                    Coordinate newLocation = new Coordinate(ourLocation.X, ourLocation.Y);
+
+                    visitedLocations.Add(newLocation);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            Console.WriteLine("The lair is at X: " + ourLocation.X + ", Y: " + ourLocation.Y);
+            int finalDistance = Math.Abs(ourLocation.X) + Math.Abs(ourLocation.Y);
+            Console.WriteLine("Which is " + finalDistance + " blocks away from where we started!");
         }
 
         private void SetDirectionStep()
