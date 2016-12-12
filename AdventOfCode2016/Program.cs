@@ -48,7 +48,34 @@ namespace AdventOfCode2016
                                     inputValid = true;
                                     thisDay = new Day2();
                                     break;
+                                case 3:
+                                    inputValid = true;
+                                    thisDay = new Day3();
+                                    break;
+                                case 4:
+                                case 5:
+                                case 6:
+                                case 7:
+                                case 8:
+                                case 9:
+                                case 10:
+                                case 11:
+                                case 12:
+                                case 13:
+                                case 14:
+                                case 15:
+                                case 16:
+                                case 17:
+                                case 18:
+                                case 19:
+                                case 20:
+                                case 21:
+                                case 22:
+                                case 23:
+                                case 24:
+                                case 25:
                                 default:
+                                    inputValid = false;
                                     Console.WriteLine("I don't know that day, try again");
                                     break;
                             }
