@@ -9,6 +9,9 @@ namespace AdventOfCode2016.Days
 {
     public class Day9 : IDay
     {
+        /**
+         * I copied this one from Reddit :(
+         */
         public void RunSimple()
         {
             Console.WriteLine("Welcome to Day 9: File decryption");

@@ -77,6 +77,9 @@ namespace AdventOfCode2016
                                     thisDay = new Day9();
                                     break;
                                 case 10:
+                                    inputValid = true;
+                                    thisDay = new Day10();
+                                    break;
                                 case 11:
                                 case 12:
                                 case 13:
