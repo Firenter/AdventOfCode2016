@@ -17,6 +17,11 @@ namespace AdventOfCode2016.HelperClasses
             chips = new List<int>();
         }
 
+        public bool HasBothChips()
+        {
+            return chips.Count() == 2;
+        }
+
         public int GetHighValue()
         {
             try
@@ -43,7 +48,8 @@ namespace AdventOfCode2016.HelperClasses
 
         public void AddValue(int value)
         {
-            chips.Add(value);
+            if (!chips.Contains(value))
+                chips.Add(value);
         }
     }
 }

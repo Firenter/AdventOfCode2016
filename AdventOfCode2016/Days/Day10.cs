@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AdventOfCode2016.Days
@@ -23,7 +24,9 @@ namespace AdventOfCode2016.Days
 
             List<string> instructions = File.ReadLines("InputFiles/inputday10.txt").ToList();
 
-            swarm = new List<ChipBot>();
+            TheRedditWay(instructions);
+
+            /*swarm = new List<ChipBot>();
             outputs = new List<OutputBin>();
 
             commandBacklog = new List<KeyValuePair<int, string>>();
@@ -63,19 +66,77 @@ namespace AdventOfCode2016.Days
                 commandCounter++;
             }
 
-            /*List<ChipBot> goodBots = swarm.Where(b => b.GetHighValue() == 61).ToList();
-            List<ChipBot> goodBots2 = swarm.Where(b => b.GetLowValue() == 17).ToList();*/
-            
+            List<ChipBot> goodBots = swarm.Where(b => b.GetHighValue() == 61).ToList();
+            List<ChipBot> goodBots2 = swarm.Where(b => b.GetLowValue() == 17).ToList();
+            List<ChipBot> goodBots3 = swarm.Where(b => b.HasBothChips()).ToList();
+
             ChipBot ourBot = swarm.Where(b => (b.GetHighValue() == 61 && b.GetLowValue() == 17)).FirstOrDefault();
 
             if (ourBot != null)
-                Console.WriteLine("The bot we need is " + ourBot.identity);
+                Console.WriteLine("The bot we need is " + ourBot.identity);*/
 
         }
 
         public void RunAdvanced()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Welcome to Day 10: Flying robots");
+
+            List<string> instructions = File.ReadLines("InputFiles/inputday10.txt").ToList();
+
+            TheRedditWay(instructions, true);
+        }
+
+        private void TheRedditWay(List<string> lines, bool part2 = false)
+        {
+            var bots = new Dictionary<int, Action<int>>();
+            int[] outputs = new int[21];
+
+            var regex = new Regex(@"value (?<value>\d+) goes to bot (?<bot>\d+)|bot (?<source>\d+) gives low to (?<low>(bot|output)) (?<lowval>\d+) and high to (?<high>(bot|output)) (?<highval>\d+)");
+
+            foreach (var line in lines.OrderBy(x => x))
+            {
+                var match = regex.Match(line);
+                if (match.Groups["value"].Success)
+                {
+                    bots[int.Parse(match.Groups["bot"].Value)](int.Parse(match.Groups["value"].Value));
+                }
+                if (match.Groups["source"].Success)
+                {
+                    List<int> vals = new List<int>();
+                    var botnum = int.Parse(match.Groups["source"].Value);
+                    bots[botnum] = (int n) =>
+                    {
+                        vals.Add(n);
+                        if (vals.Count == 2)
+                        {
+                            if (vals.Min() == 17 && vals.Max() == 61 && !part2) Console.WriteLine("Our bot is " + botnum); //botnum.Dump("Part 1");
+                            if (match.Groups["low"].Value == "bot")
+                            {
+                                bots[int.Parse(match.Groups["lowval"].Value)](vals.Min());
+                            }
+                            else
+                            {
+                                outputs[int.Parse(match.Groups["lowval"].Value)] = vals.Min();
+                            }
+                            if (match.Groups["high"].Value == "bot")
+                            {
+                                bots[int.Parse(match.Groups["highval"].Value)](vals.Max());
+                            }
+                            else
+                            {
+                                outputs[int.Parse(match.Groups["highval"].Value)] = vals.Max();
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (part2)
+            {
+                //part 2
+                double p2output = outputs[0] * outputs[1] * outputs[2];
+                Console.WriteLine("Multiplication: " + p2output);
+            }
         }
 
         private void ExecuteCommand(ChipBotCommands commandType, string command)
@@ -92,6 +153,8 @@ namespace AdventOfCode2016.Days
                     currentBot.AddValue(value);
                     break;
                 case ChipBotCommands.DropOff:
+                    /*if (currentBot.HasBothChips())
+                    {*/
                     if (command.StartsWith("bot"))
                         command = command.Remove(0, command.IndexOf("gives") + 5);
 
@@ -108,9 +171,11 @@ namespace AdventOfCode2016.Days
                         outputBin.values.Add(valueToDrop);
                     else
                         commandBacklog.Add(new KeyValuePair<int, string>(currentBot.identity, command));
-
+                    //}
                     break;
                 case ChipBotCommands.HandOff:
+                    /*if (currentBot.HasBothChips())
+                    {*/
                     if (command.StartsWith("bot"))
                         command = command.Remove(0, command.IndexOf("gives") + 5);
 
@@ -127,7 +192,7 @@ namespace AdventOfCode2016.Days
                         otherBot.AddValue(valueToHandOff);
                     else
                         commandBacklog.Add(new KeyValuePair<int, string>(currentBot.identity, command));
-
+                    //}
                     break;
                 default:
                     Console.WriteLine("How the hell did you force this?");
